@@ -39,7 +39,7 @@ export default function AdminForm() {
             {file ? (
               <h4>{file.name}</h4>
             ) : (
-              <h4>행사에 대한 정보를 얻을 수 있는 파일 업로드</h4>
+              <h4>행사에 대한 정보를 얻을 수 있는 파일 업로드(pdf)</h4>
             )}
           </label>
           <input
