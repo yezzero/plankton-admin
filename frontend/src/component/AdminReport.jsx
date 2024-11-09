@@ -8,8 +8,6 @@ export default function AdminReport() {
   const [isSubmitting, setIsSubmitting] = useState(false); // 로딩 상태
   const [accidentReports, setAccidentReports] = useState([]); // 사고 데이터
 
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
-
   useEffect(() => {
     const fetchAccidentReports = async () => {
       try {
@@ -54,15 +52,19 @@ export default function AdminReport() {
     setIsSubmitting(false);
   };
 
+  const getImageSrc = (base64String) => {
+    return `data:image/jpeg;base64,${base64String}`;
+  };
+
   return (
     <div className="report-container">
       <div className="report-left">
-        {accidentReports.map((accident, index) => (
+        {accidentReports.map((accident) => (
           <div key={accident.accidentId} className="report-box">
             {accident.img && (
               <img
-                src={`${REACT_APP_BASE_URL}/img/${accident.img}`}
-                alt={`accident-${index}`}
+                src={getImageSrc(accident.img)} // Base64를 img src로 변환
+                alt={`accident-${accident.accidentId}`}
               />
             )}
             <div className="report-content">
