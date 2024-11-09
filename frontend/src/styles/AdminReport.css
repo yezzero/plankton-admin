@@ -63,6 +63,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     margin: 20px 0;
+    width: 100%;
   }
 
   & h3 {

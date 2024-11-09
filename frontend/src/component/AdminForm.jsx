@@ -5,6 +5,7 @@ import AdminCurrent from "./AdminCurrent";
 export default function AdminForm() {
   const [address, setAddress] = useState("");
   const [file, setFile] = useState(null);
+  const [polygonData, setPolygonData] = useState([]); // State to store polygon data
 
   const handleAddressChange = (event) => {
     setAddress(event.target.value);
@@ -18,6 +19,44 @@ export default function AdminForm() {
       alert("PDF 파일만 업로드 가능합니다.");
       event.target.value = "";
       setFile(null);
+    }
+  };
+
+  // Callback to update polygon data when a new polygon is added
+  const handlePolygonDataChange = (newPolygon) => {
+    setPolygonData((prevPolygons) => [...prevPolygons, newPolygon]);
+  };
+
+  const handleSubmit = async () => {
+    if (polygonData.length === 0) {
+      alert("폴리곤 데이터를 추가해 주세요.");
+      return;
+    }
+    const formattedPolygonData = encodeURIComponent(
+      JSON.stringify(polygonData)
+    );
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BASE_URL}/info?polygon=${formattedPolygonData}`,
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        alert("폴리곤 데이터가 성공적으로 저장되었습니다.");
+        setPolygonData([]); // Clear the data after successful submission
+      } else {
+        console.error("데이터 전송에 실패했습니다.");
+        alert("데이터 전송에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("Error submitting polygon data:", error);
+      alert("서버에 폴리곤 데이터를 전송하는 중 오류가 발생했습니다.");
     }
   };
 
@@ -50,10 +89,12 @@ export default function AdminForm() {
             style={{ display: "none" }}
           />
         </div>
-        <AdminCurrent />
+        <AdminCurrent onPolygonDataChange={handlePolygonDataChange} />
       </div>
 
-      <button className="form-submit">완료하기</button>
+      <button className="form-submit" onClick={handleSubmit}>
+        완료하기
+      </button>
     </div>
   );
 }

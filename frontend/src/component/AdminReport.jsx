@@ -12,8 +12,6 @@ export default function AdminReport() {
     type2: false,
   });
 
-  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
-
   useEffect(() => {
     const fetchAccidentReports = async () => {
       try {
@@ -68,17 +66,21 @@ export default function AdminReport() {
       }
       return prevTypes; // 다른 변경이 없으면 상태 유지
     });
+
+  const getImageSrc = (base64String) => {
+    return `data:image/jpeg;base64,${base64String}`;
+
   };
 
   return (
     <div className="report-container">
       <div className="report-left">
-        {accidentReports.map((accident, index) => (
+        {accidentReports.map((accident) => (
           <div key={accident.accidentId} className="report-box">
             {accident.img && (
               <img
-                src={`${REACT_APP_BASE_URL}/img/${accident.img}`}
-                alt={`accident-${index}`}
+                src={getImageSrc(accident.img)} // Base64를 img src로 변환
+                alt={`accident-${accident.accidentId}`}
               />
             )}
             <div className="report-content">
