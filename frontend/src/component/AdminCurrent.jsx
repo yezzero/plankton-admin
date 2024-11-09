@@ -4,8 +4,7 @@ import PolygonButton from "./PolygonButton";
 import useGeolocation from "../hooks/useGeolocation";
 import React, { useState } from "react";
 
-
-export default function AdminCurrent() {
+export default function AdminCurrent({ onPolygonDataChange }) {
   const { currentMyLocation, locationLoading } = useGeolocation();
   const [isDrawing, setIsDrawing] = useState(false);
 
@@ -13,14 +12,15 @@ export default function AdminCurrent() {
     setIsDrawing((prev) => !prev);
   };
 
-  // 폴리곤을 데이터베이스에 저장하는 함수
-  const savePolygonToDB = async (polygonPath) => {
+  const savePolygonToDB = (polygonPath) => {
     const polygonData = polygonPath.map((point) => ({
       lat: point.lat(),
       lng: point.lng(),
     }));
     console.log("저장할 폴리곤 데이터:", polygonData);
-    // 여기에 DB 저장 로직 추가
+
+    // Update the parent component with the new polygon data
+    onPolygonDataChange(polygonData);
   };
 
   return (
@@ -32,7 +32,7 @@ export default function AdminCurrent() {
           <CurrentMap
             currentLocation={currentMyLocation}
             isDrawing={isDrawing}
-            onSavePolygon={savePolygonToDB} // 함수 전달
+            onSavePolygon={savePolygonToDB} // Pass the function
           />
         )}
       </div>
