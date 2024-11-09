@@ -1,18 +1,21 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/AdminMain.css";
 import AdminForm from "../component/AdminForm";
 import AdminReport from "../component/AdminReport";
 import { PiNotebookFill } from "react-icons/pi";
 import { BsInboxFill } from "react-icons/bs";
+import AdminCurrent from "../component/AdminCurrent";
 
 export default function AdminMain() {
+    const navigate = useNavigate();
     const [comp, setComp] = useState("");
 
     return (
         <div
             className="main-container"
         >
-            <div className="main-top">
+            <div className="main-top" onClick={()=>navigate("/current")}>
                 <div className="main-logo">
                     <img src={process.env.PUBLIC_URL + "/logo.png"} alt="w" />
                 </div>
