@@ -66,10 +66,10 @@ export default function AdminReport() {
       }
       return prevTypes; // 다른 변경이 없으면 상태 유지
     });
+  };
 
   const getImageSrc = (base64String) => {
     return `data:image/jpeg;base64,${base64String}`;
-
   };
 
   return (
@@ -98,8 +98,8 @@ export default function AdminReport() {
       </div>
       <div className="report-right">
         <div className="report-category">
-          <h3>공지유형</h3>
-          <div className="report-category-select">
+          {/* <h3>공지유형</h3> */}
+          {/* <div className="report-category-select">
             <label>
               <input
                 type="checkbox"
@@ -116,7 +116,7 @@ export default function AdminReport() {
               />
               일반공지
             </label>
-          </div>
+          </div> */}
         </div>
         <div className="report-title">
           <h3>제목</h3>
@@ -137,7 +137,11 @@ export default function AdminReport() {
         </div>
         <div className="report-submit">
           <div className="submit-block" />
-          <button onClick={handleReportSubmit} disabled={isSubmitting}>
+          <button
+            onClick={handleReportSubmit}
+            disabled={isSubmitting}
+            style={{ position: "relative", left: "25px" }}
+          >
             {isSubmitting ? "제출 중..." : "공지하기"}
           </button>
         </div>
@@ -145,4 +149,3 @@ export default function AdminReport() {
     </div>
   );
 }
-  
