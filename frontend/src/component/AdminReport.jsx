@@ -1,63 +1,104 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/AdminReport.css";
+import { report, getAccidents } from "../services/chatbotService";
 
 export default function AdminReport() {
-  const reports = [
-    {
-      title: "유모차",
-      content: "유모차 지나다니는 길이 쓰레기로 막혀서 다닐 수가 없어요",
-      category: 1,
-      img: "/logo192.png",
-    },
-    {
-      title: "음료 자판기",
-      content:
-        "입구 쪽 음료 자판기가 고장 나서 사용이 불가한 상태입니다. 많은 관람객이 이용 중인데 점검 부탁드립니다.",
-      category: 1,
-      img: null,
-    },
-    {
-      title: "울타리 파손",
-      content:
-        "메인 구역 앞쪽 안전 울타리가 파손됐어요!! 관람객들이 다치지 않도록 빠른 수습 부탁드립니다!!",
-      category: 1,
-      img: null,
-    },
-    {
-      title: "유모차",
-      content:
-        "어린이들이 많은 A구역에 인파가 밀리고 있어요... 안전 관리가 필요할 것 같습니다.",
-      category: 0,
-      img: "/logo.png",
-    },
-  ];
+  const [title, setTitle] = useState(""); // 제목 상태
+  const [content, setContent] = useState(""); // 내용 상태
+  const [isSubmitting, setIsSubmitting] = useState(false); // 로딩 상태
+  const [accidentReports, setAccidentReports] = useState([]); // 사고 데이터
+
+  const REACT_APP_BASE_URL = process.env.REACT_APP_BASE_URL;
+
+  useEffect(() => {
+    const fetchAccidentReports = async () => {
+      try {
+        const response = await getAccidents();
+        if (response.status === 200) {
+          const accidentData = response.data;
+          setAccidentReports(accidentData);
+          accidentData.forEach((accident) => {
+            console.log("Longitude:", accident.longitude);
+            console.log("Latitude:", accident.latitude);
+          });
+        } else {
+          console.error("Failed to fetch accident data");
+        }
+      } catch (error) {
+        console.error("Error fetching accident data:", error);
+      }
+    };
+
+    fetchAccidentReports();
+  }, []);
+
+  const handleReportSubmit = async () => {
+    if (!title.trim() || !content.trim()) {
+      alert("제목과 내용을 모두 입력해 주세요.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await report(title, content);
+      if (response.status === 200) {
+        alert("공지를 보냈습니다.");
+        setTitle("");
+        setContent("");
+      } else {
+        alert("공지 보내기에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("Report submission error:", error);
+    }
+    setIsSubmitting(false);
+  };
 
   return (
     <div className="report-container">
-      <div className="report-list">
-        {reports.map((element, index) => {
-          return (
-            <div className="report-box">
-              {element.img && (
-                <img
-                  src={`${process.env.PUBLIC_URL + element.img} `}
-                  alt={index}
-                />
+      <div className="report-left">
+        {accidentReports.map((accident, index) => (
+          <div key={accident.accidentId} className="report-box">
+            {accident.img && (
+              <img
+                src={`${REACT_APP_BASE_URL}/img/${accident.img}`}
+                alt={`accident-${index}`}
+              />
+            )}
+            <div className="report-content">
+              {accident.category === 0 ? (
+                <p>인명사고</p>
+              ) : accident.category === 1 ? (
+                <p>시설사고</p>
+              ) : (
+                <p>범죄</p>
               )}
-              <div className="report-content">
-                {element.category === 0 ? (
-                  <p>인명사고</p>
-                ) : element.category === 1 ? (
-                  <p>시설사고</p>
-                ) : (
-                  <p>범죄</p>
-                )}
-                <h1>{element.title}</h1>
-                <h4>{element.content}</h4>
-              </div>
+              <h4>{accident.content}</h4>
             </div>
-          );
-        })}
+          </div>
+        ))}
+      </div>
+      <div className="report-right">
+        <div>
+          <h3>제목</h3>
+          <input
+            placeholder="제목을 적어주세요"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div>
+          <h3>내용</h3>
+          <input
+            placeholder="내용을 적어주세요"
+            style={{ height: "350px" }}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
+        </div>
+        <button onClick={handleReportSubmit} disabled={isSubmitting}>
+          {isSubmitting ? "제출 중..." : "공지하기"}
+        </button>
       </div>
     </div>
   );
