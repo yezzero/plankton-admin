@@ -7,6 +7,10 @@ export default function AdminReport() {
   const [content, setContent] = useState(""); // 내용 상태
   const [isSubmitting, setIsSubmitting] = useState(false); // 로딩 상태
   const [accidentReports, setAccidentReports] = useState([]); // 사고 데이터
+  const [selectedTypes, setSelectedTypes] = useState({
+    type1: false,
+    type2: false,
+  });
 
   useEffect(() => {
     const fetchAccidentReports = async () => {
@@ -52,8 +56,20 @@ export default function AdminReport() {
     setIsSubmitting(false);
   };
 
+  const handleCheckboxChange = (type) => {
+    setSelectedTypes((prevTypes) => {
+      if (type === "type1" && !prevTypes.type1) {
+        return { type1: true, type2: false }; // type1이 체크되면 type2는 해제
+      }
+      if (type === "type2" && !prevTypes.type2) {
+        return { type1: false, type2: true }; // type2가 체크되면 type1은 해제
+      }
+      return prevTypes; // 다른 변경이 없으면 상태 유지
+    });
+
   const getImageSrc = (base64String) => {
     return `data:image/jpeg;base64,${base64String}`;
+
   };
 
   return (
@@ -81,7 +97,28 @@ export default function AdminReport() {
         ))}
       </div>
       <div className="report-right">
-        <div>
+        <div className="report-category">
+          <h3>공지유형</h3>
+          <div className="report-category-select">
+            <label>
+              <input
+                type="checkbox"
+                checked={selectedTypes.type1}
+                onChange={() => handleCheckboxChange("type1")}
+              />
+              긴급공지
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={selectedTypes.type2}
+                onChange={() => handleCheckboxChange("type2")}
+              />
+              일반공지
+            </label>
+          </div>
+        </div>
+        <div className="report-title">
           <h3>제목</h3>
           <input
             placeholder="제목을 적어주세요"
@@ -89,7 +126,7 @@ export default function AdminReport() {
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <div>
+        <div className="report-content">
           <h3>내용</h3>
           <input
             placeholder="내용을 적어주세요"
@@ -98,10 +135,14 @@ export default function AdminReport() {
             onChange={(e) => setContent(e.target.value)}
           />
         </div>
-        <button onClick={handleReportSubmit} disabled={isSubmitting}>
-          {isSubmitting ? "제출 중..." : "공지하기"}
-        </button>
+        <div className="report-submit">
+          <div className="submit-block" />
+          <button onClick={handleReportSubmit} disabled={isSubmitting}>
+            {isSubmitting ? "제출 중..." : "공지하기"}
+          </button>
+        </div>
       </div>
     </div>
   );
 }
+  

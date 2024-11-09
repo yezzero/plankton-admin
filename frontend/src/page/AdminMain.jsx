@@ -5,7 +5,6 @@ import AdminForm from "../component/AdminForm";
 import AdminReport from "../component/AdminReport";
 import { PiNotebookFill } from "react-icons/pi";
 import { BsInboxFill } from "react-icons/bs";
-import AdminCurrent from "../component/AdminCurrent";
 
 export default function AdminMain() {
   const navigate = useNavigate();
