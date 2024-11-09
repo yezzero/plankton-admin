@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/AdminForm.css";
+import AdminCurrent from "./AdminCurrent";
 
 export default function AdminForm() {
   const [address, setAddress] = useState("");
@@ -49,6 +50,7 @@ export default function AdminForm() {
             style={{ display: "none" }}
           />
         </div>
+        <AdminCurrent />
       </div>
 
       <button className="form-submit">완료하기</button>
