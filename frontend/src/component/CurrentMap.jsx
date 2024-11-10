@@ -53,7 +53,7 @@ export default function CurrentMap({
           position: navermaps?.Position?.TOP_RIGHT,
         }}
         defaultCenter={new navermaps.LatLng(37.52389, 126.92667)} // Center at Yeouido
-        minZoom={14}
+        minZoom={10}
         maxBounds={
           new navermaps.LatLngBounds(
             new navermaps.LatLng(37.5189, 126.9241), // SW corner

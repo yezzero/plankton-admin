@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import './App.css';
-import AdminMain from './page/AdminMain';
+import "./App.css";
+import AdminMain from "./page/AdminMain";
 import AdminCurrent from "./component/AdminCurrent";
 
 function App() {

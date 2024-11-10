@@ -12,7 +12,7 @@ export default function AdminMain() {
 
   return (
     <div className="main-container">
-      <div className="main-top" onClick={() => navigate("/current")}>
+      <div className="main-top" onClick={() => navigate("/")}>
         <div className="main-logo">
           <img src={process.env.PUBLIC_URL + "/logo.png"} alt="w" />
         </div>
